@@ -7,6 +7,8 @@ class MoviesController < ApplicationController
   end
 
   def show
+    @reviews = @movie.reeviews
+    @reviewed_users = @reviews.collect(&:user_id)
   end
 
   def new
@@ -56,6 +58,6 @@ class MoviesController < ApplicationController
     end
 
     def movie_params
-      params.require(:movie).permit(:image, :title, :description, :movie_length, :director, :rating)
+      params.require(:movie).permit(:image, :title, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code)
     end
 end

@@ -11,4 +11,8 @@ class Movie < ActiveRecord::Base
   	end
   	(a.sum/a.size.to_f).round(1)
   end
+  def country_name
+    country = ISO3166::Country[country_code]
+    country.translations[I18n.locale.to_s] || country.name
+  end
 end

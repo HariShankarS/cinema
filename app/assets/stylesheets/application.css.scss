@@ -10,14 +10,14 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
+ * require_tree .
  *= require_self
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
 body {
-	background: #AA4847;
+	background: #0093D1;
 }
 
 .review_title {
@@ -25,8 +25,23 @@ body {
 }
 .reviews {
 	padding: 15px 0;
-	border-bottom: 1px solid #EAEAEA;
 	.star-rating {
 		padding-bottom: 8px;
 	}
+}
+.center {
+	text-align: center;
+}
+i {
+	font-size: 15px !important;
+}
+.title {
+	font-family: Sniglet;
+}
+.description {
+	font-family: Sniglet;
+	line-height: 130%;
+}
+.sub-headings {
+	font-family: 'Josefin Sans', sans-serif;
 }
