@@ -7,6 +7,6 @@ Rails.application.routes.draw do
     resources :reeviews, except: [:index, :show]
   end
 
-  root 'movies#index'
+  root 'movies#home'
 
 end

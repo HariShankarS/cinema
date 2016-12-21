@@ -1,26 +1,24 @@
+<div class="container-fluid">
 <div class="show panel panel-default">
   <div class="panel-body">
     <div class="row">
       <div class="col-md-4 col-md-offset-4">
         <br />
-        <h1 class="center title review_title"><%= @movie.title %></h1>
-<!--         <div class="col-md-8 ">
-          <h5> <%= @movie.genre %> </h5>
-        </div>
-        <div class="col-md-4">
-          <h5> <%= @movie.movie_length %> </h5>
-        </div> -->
-        <%= image_tag @movie.image.url(:medium) %>
+        <h1 class="titles"><%= @movie.title %></h1>
         <br /><br />
+        <%= image_tag @movie.image, class:"img-responsive" %>
       </div>
   </div>
   <div class="col-md-10 col-md-offset-1">
     <h3 class="sub-headings"> Review: </h3>
-    <h4 class="description"><%= @movie.description %></h4>
+    <h4 class="descript"><%= @movie.description %></h4>
     <h3 class="sub-headings"> User Reviews: </h3>
     
     <% if @movie.reeviews.blank? %>
-      <h5 class="description">No reviews just yet, would you like to add the first! <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-info" %> </h5>
+      <h5 class="descript">No reviews just yet, would you like to add the first! 
+      <% unless user_signed_in? %>
+        <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-info" %> </h5>
+      <% end -%>
     <% else %>
       <% @movie.reeviews.each do |review| %>
         <div class="reviews">
@@ -62,6 +60,10 @@
           <tr>
             <td class="sub-headings"><strong>Movie length:</strong></td>
             <td class="description"><%= @movie.movie_length %></td>
+          </tr>
+          <tr>
+            <td class="sub-headings"><strong>Movie Trailer:</strong></td>
+            <td class="description"><iframe width="560" height="315" src="<%= @movie.trailer %>" frameborder="0" allowfullscreen></iframe></td>
           </tr>
           <tr>
             <td class="sub-headings"><strong>Starring:</strong></td>
@@ -131,3 +133,4 @@
   </div>  
 </div>
 
+</div>

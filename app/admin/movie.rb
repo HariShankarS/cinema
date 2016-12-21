@@ -3,7 +3,7 @@ ActiveAdmin.register Movie do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :image, :title, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code
+permit_params :image, :title, :trailer, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code
 
 # or
 #
@@ -17,6 +17,7 @@ form do |f|
   f.inputs  do        # builds an input field for every attribute
   	f.input :image, :as => :file #, :hint => f.template.image_tag(f.object.t.url(:thumb)) 
   	f.input :title
+    f.input :trailer
   	f.input :description
   	f.input :movie_length
   	f.input :director
@@ -46,6 +47,7 @@ end
 show do |ad|
    attributes_table do
         row :title
+        row :trailer
         row :description
         row :movie_length
         row :director

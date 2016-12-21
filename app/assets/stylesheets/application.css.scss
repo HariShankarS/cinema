@@ -16,32 +16,159 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
-body {
-	background: #0093D1;
-}
-
-.review_title {
-	margin: 0 0 20px 0;
-}
-.reviews {
-	padding: 15px 0;
-	.star-rating {
-		padding-bottom: 8px;
-	}
-}
 .center {
 	text-align: center;
 }
 i {
 	font-size: 15px !important;
 }
-.title {
-	font-family: Sniglet;
-}
-.description {
+.descript {
 	font-family: Sniglet;
 	line-height: 130%;
 }
 .sub-headings {
 	font-family: 'Josefin Sans', sans-serif;
+}
+.navbar-default {
+  background-color: transparent !important;
+}
+.container-fluid {
+	padding-left: 0px !important;
+	padding-right: 0px	!important;
+}
+.navbar {
+	margin-bottom: 0px;
+}
+
+.back	{
+  transform: rotateX(30deg) rotateY(-25deg) rotateZ(15deg);
+  width: 130%;
+  margin-left: -16%;
+  margin-top: -5%;
+  margin-bottom: -10%;
+  z-index: -1;
+  background :#333333;
+}
+.zoom-in {
+  transition: all .3s linear;
+  transition-duration: 8s;
+  transform: scale(1.1);
+}
+.zoom-out {
+  transition: all .3s linear;
+  transition-duration: 8s;
+  transform: scale(1);
+}
+.out {
+  width: 100%;
+}
+.outer {  
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  background: -moz-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* ff3.6+ */
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(0,0,0,1)), color-stop(150%, rgba(0,0,0,0))); /* safari4+,chrome */
+  background: -webkit-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* opera 11.10+ */
+  background: -ms-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* ie10+ */
+  background: linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* w3c */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ffffff',GradientType=1 ); /* ie6-9 */
+}
+.back img {
+  border: 2px solid #333333;
+}
+.mainn {
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+.mainn .button {
+  margin-top: 30px;
+  margin-right: 40px;
+  padding-left: 15px;
+  padding-right: 15px; 
+  background-color: #E50914;
+}
+.mainn .button1 {
+  padding-left: 25px;
+  padding-right: 25px; 
+  background-color: #E50914;
+  font-size: 20px;
+  font-family: 'Josefin Sans', sans-serif;
+}
+.mainn h1 {
+  font-family: Sniglet;
+  font-size: 3em;
+  font-weight: bold;
+  color: white;
+}
+.mainn h2 {
+  font-family: Sniglet;
+  font-size: 2em;
+  font-weight: bold;
+  color: white;
+}
+.title h1 {
+  font-family: Sniglet;
+  font-size: 40px;
+  font-weight: bold;
+  padding-left: 30px; 
+  color: #E50914;
+}
+.description {
+  padding: 250px 0px 150px 50px;
+}
+.title {
+  float: left;
+  font-family: Sniglet;  
+}
+.titles {
+  text-align: center;
+  font-family: Sniglet;
+}
+.sign-in {
+  float: right;
+}
+#wallpaper {
+    min-height: 700px;
+    background-image: url("/36.jpg");
+      /* Background image is centered vertically and horizontally at all times */
+  background-position: center center;
+  
+  /* Background image doesn't tile */
+  background-repeat: no-repeat;
+  
+  /* Background image is fixed in the viewport so that it doesn't move when 
+     the content's height is greater than the image's height */
+  background-attachment: fixed;
+  
+  /* This is what makes the background image rescale based
+     on the container's size */
+  background-size: cover;
+  
+  /* Set a background color that will be displayed
+     while the background image is loading */
+  background-color: #464646;
+}
+
+.gradient {
+  background: black;
+  width: 100%;
+  z-index: 1;
+  opacity: 0.6;
+  position: absolute;
+  min-height: 700px;
+}
+.devise {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+}
+.transparent-input {
+  background-color:rgba(0,0,0,0) !important;
+  border: 1px solid black;
+}
+.labe {
+  color: black;
+  font-family: Sniglet !important;     
 }

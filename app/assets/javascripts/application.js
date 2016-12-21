@@ -15,3 +15,9 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require_tree .
+$(document).on("mouseover",".mainn",function(){
+    $("#div1").addClass("zoom-in");
+});
+$(document).on("mouseleave",".mainn",function(){
+    $("#div1").addClass("zoom-out");
+});

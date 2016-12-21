@@ -1,7 +1,11 @@
 class MoviesController < ApplicationController
   before_action :set_movie, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, except: [:index, :show]
-  
+  before_action :authenticate_user!, except: [:index, :show, :home]
+  layout "devise", only: [:home]
+
+  def home
+  end
+    
   def index
     @movies = Movie.where(["title LIKE ?","%#{params[:search]}%"])
   end
@@ -58,6 +62,6 @@ class MoviesController < ApplicationController
     end
 
     def movie_params
-      params.require(:movie).permit(:image, :title, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code)
+      params.require(:movie).permit(:image, :title, :trailer, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code)
     end
 end
