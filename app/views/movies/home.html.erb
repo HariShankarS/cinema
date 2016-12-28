@@ -17,7 +17,7 @@
       <img src="/13.jpg" height="220" width="300">
       <img src="/23.jpg" height="220" width="230">
       <img src="/5.jpg" height="220" width="300">
-      <img src="/2.jpg" height="220" width="420">
+      <img src="/2.jpg" height="220" width="450">
       <img src="/34.jpg" height="220" width="440">
       <img src="/12.jpg" height="220" width="190">
       <img src="/27.jpg" height="220" width="250">
@@ -44,7 +44,11 @@
   <div class="description">
     <h1>Your Favourite Movies Reviewed</h1>
     <h2> Collection of Hit Movies, Songs and Trailers. </h2> <br>
-    <%= link_to "SIGN UP FOR FREE", new_user_session_path, class:"btn btn-raised btn-danger button1" %>
+    <% if user_signed_in? %>
+      <%= link_to "Movies", movies_path, class:"btn btn-raised btn-danger button1" %>
+    <% else %>
+      <%= link_to "SIGN UP FOR FREE", new_user_session_path, class:"btn btn-raised btn-danger button1" %>
+    <% end -%>
   </div>
 </div>
 

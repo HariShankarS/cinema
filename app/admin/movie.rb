@@ -3,7 +3,7 @@ ActiveAdmin.register Movie do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :image, :title, :trailer, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code
+permit_params :image, :title, :trailer, :description, :movie_length, :director, :rating, :cast, :story, :screenplay, :dialogues, :producer, :lyricists, :music, :cinematography, :language, :genre, :country_code, category_ids: [] 
 
 # or
 #
@@ -15,13 +15,13 @@ permit_params :image, :title, :trailer, :description, :movie_length, :director, 
 form do |f|
   f.semantic_errors # shows errors on :base
   f.inputs  do        # builds an input field for every attribute
-  	f.input :image, :as => :file #, :hint => f.template.image_tag(f.object.t.url(:thumb)) 
-  	f.input :title
+    f.input :image, :as => :file #, :hint => f.template.image_tag(f.object.t.url(:thumb)) 
+    f.input :title
     f.input :trailer
-  	f.input :description
-  	f.input :movie_length
-  	f.input :director
-  	f.input :rating
+    f.input :description
+    f.input :movie_length
+    f.input :director
+    f.input :rating
     f.input :cast
     f.input :story
     f.input :screenplay
@@ -30,7 +30,9 @@ form do |f|
     f.input :lyricists
     f.input :music
     f.input :cinematography
-    f.input :genre
+    f.inputs "Categories" do # Make a panel that holds inputs for Categories
+      f.input :categories, as: :check_boxes, collection: Category.all.pluck(:genre, :id) # Use formtastic to output my collection of checkboxes
+    end
     f.input :language
     f.country_select :country_code, ["India"]
   end
@@ -60,11 +62,10 @@ show do |ad|
         row :lyricists
         row :music
         row :cinematography
-        row :genre
         row :language
         row :country_name
         row :image do
-          image_tag(ad.image.url(:medium))
+          image_tag(ad.image.url(:thumb))
         end
         # Will display the image on show object page
       end
