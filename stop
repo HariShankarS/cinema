@@ -1,0 +1,1188 @@
+[1mdiff --git a/app/assets/stylesheets/application.scss b/app/assets/stylesheets/application.scss[m
+[1mindex 2909dd1..b525f0a 100644[m
+[1m--- a/app/assets/stylesheets/application.scss[m
+[1m+++ b/app/assets/stylesheets/application.scss[m
+[36m@@ -142,27 +142,6 @@[m [mi {[m
+ .sign-in {[m
+   float: right;[m
+ }[m
+[31m-#wallpaper {[m
+[31m-    min-height: 700px;[m
+[31m-    background-image: url("/36.jpg");[m
+[31m-      /* Background image is centered vertically and horizontally at all times */[m
+[31m-  background-position: center center;[m
+[31m-  [m
+[31m-  /* Background image doesn't tile */[m
+[31m-  background-repeat: no-repeat;[m
+[31m-  [m
+[31m-  /* Background image is fixed in the viewport so that it doesn't move when [m
+[31m-     the content's height is greater than the image's height */[m
+[31m-  background-attachment: fixed;[m
+[31m-  [m
+[31m-  /* This is what makes the background image rescale based[m
+[31m-     on the container's size */[m
+[31m-  background-size: cover;[m
+[31m-  [m
+[31m-  /* Set a background color that will be displayed[m
+[31m-     while the background image is loading */[m
+[31m-  background-color: #464646;[m
+[31m-}[m
+ [m
+ .gradient {[m
+   background: black;[m
+[36m@@ -176,13 +155,14 @@[m [mi {[m
+   position: absolute;[m
+   z-index: 10;[m
+   width: 100%;[m
+[32m+[m[32m  color: white;[m
+ }[m
+ .transparent-input {[m
+   background-color:rgba(0,0,0,0) !important;[m
+[31m-  border: 1px solid black;[m
+[32m+[m[32m  border: 1px solid white;[m
+ }[m
+ .labe {[m
+[31m-  color: black;[m
+[32m+[m[32m  color: white;[m
+   font-family: Sniglet !important;     [m
+ }[m
+ .navbar-brand {[m
+[36m@@ -269,4 +249,8 @@[m [mbody {[m
+  .carousel-control {[m
+   background-color: none !important;[m
+  }[m
+[32m+[m[32m .devise a:hover {[m
+[32m+[m[32m   color: white;[m
+[32m+[m[32m   text-decoration: none;[m
+[32m+[m[32m }[m
+  [m
+[1mdiff --git a/app/controllers/application_controller.rb b/app/controllers/application_controller.rb[m
+[1mindex 3958310..e1bae5b 100644[m
+[1m--- a/app/controllers/application_controller.rb[m
+[1m+++ b/app/controllers/application_controller.rb[m
+[36m@@ -4,7 +4,6 @@[m [mclass ApplicationController < ActionController::Base[m
+   protect_from_forgery with: :exception[m
+   before_action :configure_devise_permitted_parameters, if: :devise_controller?[m
+ [m
+[31m-  include ControlLerHelper[m
+   [m
+   protected[m
+ [m
+[36m@@ -12,11 +11,11 @@[m [mclass ApplicationController < ActionController::Base[m
+     registration_params = [:name, :email, :password, :password_confirmation][m
+ [m
+     if params[:action] == 'update'[m
+[31m-      devise_parameter_sanitizer.for(:account_update) { [m
+[32m+[m[32m      devise_parameter_sanitizer.permit(:account_update) {[m[41m [m
+         |u| u.permit(registration_params << :current_password)[m
+       }[m
+     elsif params[:action] == 'create'[m
+[31m-      devise_parameter_sanitizer.for(:sign_up) { [m
+[32m+[m[32m      devise_parameter_sanitizer.permit(:sign_up) {[m[41m [m
+         |u| u.permit(registration_params) [m
+       }[m
+     end[m
+[1mdiff --git a/app/views/devise/registrations/new.html.erb b/app/views/devise/registrations/new.html.erb[m
+[1mindex 60ef8cd..15a4f3e 100644[m
+[1m--- a/app/views/devise/registrations/new.html.erb[m
+[1m+++ b/app/views/devise/registrations/new.html.erb[m
+[36m@@ -1,25 +1,32 @@[m
+[31m-<div class="col-md-4 col-md-offset-4">[m
+[31m-  <h2 class="center">Sign up</h2>[m
+[31m-[m
+[32m+[m[32m<div class="container-fluid">[m
+[32m+[m[32m  <div class="gradient">[m
+[32m+[m[32m  </div>[m
+[32m+[m[32m  <div class="devise">[m
+[32m+[m[32m  <div class="col-md-2 col-md-offset-5 col-xs-8 col-xs-offset-2">[m
+[32m+[m[32m    <h2 class="center labe">Sign Up</h2>[m
+   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>[m
+     <%= devise_error_messages! %>[m
+[32m+[m[32m    <div class="field">[m
+[32m+[m[32m      <%= f.label :name, class:"labe"  %><br />[m
+[32m+[m[32m      <%= f.text_field :name, autofocus: true, class: "form-control transparent-input" %>[m
+[32m+[m[32m    </div><br />[m
+ [m
+     <div class="field">[m
+[31m-      <%= f.label :email %><br />[m
+[31m-      <%= f.email_field :email, autofocus: true,class: "form-control" %>[m
+[32m+[m[32m      <%= f.label :email, class:"labe"  %><br />[m
+[32m+[m[32m      <%= f.email_field :email, autofocus: true, class: "form-control transparent-input" %>[m
+     </div><br />[m
+ [m
+     <div class="field">[m
+[31m-      <%= f.label :password %>[m
+[32m+[m[32m      <%= f.label :password, class:"labe"  %>[m
+       <% if @minimum_password_length %>[m
+       <em>(<%= @minimum_password_length %> characters minimum)</em>[m
+       <% end %><br />[m
+[31m-      <%= f.password_field :password, autocomplete: "off",class: "form-control" %>[m
+[32m+[m[32m      <%= f.password_field :password, autocomplete: "off", class: "form-control transparent-input" %>[m
+     </div><br />[m
+ [m
+     <div class="field">[m
+[31m-      <%= f.label :password_confirmation %><br />[m
+[31m-      <%= f.password_field :password_confirmation, autocomplete: "off",class: "form-control" %>[m
+[32m+[m[32m      <%= f.label :password_confirmation, class:"labe"  %><br />[m
+[32m+[m[32m      <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control transparent-input"%>[m
+     </div><br />[m
+ [m
+     <div class="actions">[m
+[36m@@ -28,4 +35,6 @@[m
+   <% end %>[m
+ [m
+   <%= render "devise/shared/links" %>[m
+[32m+[m[32m</div>[m
+[32m+[m[32m </div>[m
+ </div>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/devise/sessions/new.html.erb b/app/views/devise/sessions/new.html.erb[m
+[1mindex 89447eb..09bc9cc 100644[m
+[1m--- a/app/views/devise/sessions/new.html.erb[m
+[1m+++ b/app/views/devise/sessions/new.html.erb[m
+[36m@@ -1,19 +1,16 @@[m
+[31m-<div class="container-fluid" id="wallpaper">[m
+[31m-  <div class="gradient">[m
+[31m-  </div>[m
+[31m-  <div class="devise">[m
+[31m-  <div class="col-md-4 col-md-offset-4">[m
+[31m-    <h2 class="center">Log in</h2>[m
+[32m+[m[32m<div class="devise">[m
+[32m+[m[32m  <div class="col-md-2 col-md-offset-5 col-xs-8 col-xs-offset-2">[m
+[32m+[m[32m    <h2 class="center labe">Log in</h2>[m
+ [m
+     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>[m
+       <div class="field">[m
+         <%= f.label :email, class:"labe" %><br />[m
+[31m-        <%= f.email_field :email, autofocus: true, class: "transparent-input" %>[m
+[32m+[m[32m        <%= f.email_field :email, autofocus: true, class: "form-control labe transparent-input" %>[m
+       </div><br />[m
+ [m
+       <div class="field">[m
+         <%= f.label :password, class:"labe" %><br />[m
+[31m-        <%= f.password_field :password, autocomplete: "off", class: "transparent-input" %>[m
+[32m+[m[32m        <%= f.password_field :password, autocomplete: "off", class: "form-control labe transparent-input" %>[m
+       </div><br />[m
+ [m
+       <% if devise_mapping.rememberable? -%>[m
+[36m@@ -30,5 +27,8 @@[m
+ [m
+     <%= render "devise/shared/links" %>[m
+   </div>[m
+[31m-  </div>[m
+[32m+[m[32m</div>[m
+[32m+[m[32m<div class="gradient">[m
+[32m+[m[32m</div>[m
+[32m+[m[32m<div class="container-fluid" id="one">[m
+ </div>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/devise/shared/_links.html.erb b/app/views/devise/shared/_links.html.erb[m
+[1mindex e6a3e41..0057c48 100644[m
+[1m--- a/app/views/devise/shared/_links.html.erb[m
+[1m+++ b/app/views/devise/shared/_links.html.erb[m
+[36m@@ -1,25 +1,25 @@[m
+ <%- if controller_name != 'sessions' %>[m
+[31m-  <%= link_to "Log in", new_session_path(resource_name) %><br />[m
+[32m+[m[32m  <%= link_to "Log in", new_session_path(resource_name), class: "transparent-input labe" %><br />[m
+ <% end -%>[m
+ [m
+ <%- if devise_mapping.registerable? && controller_name != 'registrations' %>[m
+[31m-  <%= link_to "Sign up", new_registration_path(resource_name) %><br />[m
+[32m+[m[32m  <%= link_to "Sign up", new_registration_path(resource_name), class: "transparent-input labe" %><br />[m
+ <% end -%>[m
+ [m
+ <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>[m
+[31m-  <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />[m
+[32m+[m[32m  <%= link_to "Forgot your password?", new_password_path(resource_name), class: "transparent-input labe" %><br />[m
+ <% end -%>[m
+ [m
+ <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>[m
+[31m-  <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />[m
+[32m+[m[32m  <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name), class: "transparent-input labe" %><br />[m
+ <% end -%>[m
+ [m
+ <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>[m
+[31m-  <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />[m
+[32m+[m[32m  <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name), class: "transparent-input labe" %><br />[m
+ <% end -%>[m
+ [m
+ <%- if devise_mapping.omniauthable? %>[m
+   <%- resource_class.omniauth_providers.each do |provider| %>[m
+[31m-    <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider) %><br />[m
+[32m+[m[32m    <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), class: "transparent-input labe" %><br />[m
+   <% end -%>[m
+ <% end -%>[m
+[1mdiff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb[m
+[1mindex b6f5877..78d6de1 100644[m
+[1m--- a/app/views/layouts/application.html.erb[m
+[1m+++ b/app/views/layouts/application.html.erb[m
+[36m@@ -1,7 +1,13 @@[m
+ <!DOCTYPE html>[m
+ <html>[m
+   <head>[m
+[31m-    <title>Cinema</title>[m
+[32m+[m[32m    <title>[m
+[32m+[m[32m      <% if @title.present? %>[m
+[32m+[m[32m        <%= @title %>[m
+[32m+[m[32m      <% else %>[m
+[32m+[m[32m        Cinema[m
+[32m+[m[32m      <% end -%>[m
+[32m+[m[32m    </title>[m
+     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>[m
+     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>[m
+     <%= csrf_meta_tags %>[m
+[36m@@ -41,7 +47,6 @@[m
+       </div>[m
+     </div>[m
+     <div class="container"> [m
+[31m-      <%= flash_messages %>[m
+     </div>[m
+     <%= yield %>[m
+   </body>[m
+[1mdiff --git a/app/views/movies/home.html.erb b/app/views/movies/home.html.erb[m
+[1mindex 3f18c52..1fb4571 100644[m
+[1m--- a/app/views/movies/home.html.erb[m
+[1m+++ b/app/views/movies/home.html.erb[m
+[36m@@ -47,7 +47,7 @@[m
+     <% if user_signed_in? %>[m
+       <%= link_to "Movies", movies_path, class:"btn btn-raised btn-danger button1" %>[m
+     <% else %>[m
+[31m-      <%= link_to "SIGN UP FOR FREE", new_user_session_path, class:"btn btn-raised btn-danger button1" %>[m
+[32m+[m[32m      <%= link_to "SIGN UP FOR FREE", new_user_registration_path, class:"btn btn-raised btn-danger button1" %>[m
+     <% end -%>[m
+   </div>[m
+ </div>[m
+[1mdiff --git a/app/views/movies/index.html.erb b/app/views/movies/index.html.erb[m
+[1mindex 86b9b3b..71c27d8 100644[m
+[1m--- a/app/views/movies/index.html.erb[m
+[1m+++ b/app/views/movies/index.html.erb[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<div class="main">[m
+[32m+[m[32m<div class="mainn">[m
+   <div class="description">[m
+     <h1>Your Favourite Movies Reviewed</h1>[m
+     <h2> Collection of Hit Movies, Songs and Trailers. </h2> <br>[m
+[36m@@ -9,9 +9,9 @@[m
+     <% end -%>[m
+   </div>[m
+ </div>[m
+[31m-<div class="container-fluid" id="one" >[m
+[32m+[m[32m<div class="gradient">[m
+ </div>[m
+[31m-<div class="container-fluid" id="two" >[m
+[32m+[m[32m<div class="container-fluid" id="one" >[m
+ </div>[m
+ <% ["Crime","Action","Thriller","Horror"].each do|genre| %>[m
+   <div class="container-fluid">[m
+[1mdiff --git a/app/views/movies/show.html.erb b/app/views/movies/show.html.erb[m
+[1mindex 0fb6775..f45092c 100644[m
+[1m--- a/app/views/movies/show.html.erb[m
+[1m+++ b/app/views/movies/show.html.erb[m
+[36m@@ -1,3 +1,4 @@[m
+[32m+[m[32m<% @title="#{@movie.title} - #{@movie.categories.collect(&:genre).join("/")} - Cinema" %>[m
+ <div class="container-fluid">[m
+ <div class="show panel panel-default">[m
+   <div class="panel-body">[m
+[1mdiff --git a/db/schema.rb b/db/schema.rb[m
+[1mindex ba52806..2f03183 100644[m
+[1m--- a/db/schema.rb[m
+[1m+++ b/db/schema.rb[m
+[36m@@ -11,7 +11,7 @@[m
+ #[m
+ # It's strongly recommended that you check this file into your version control system.[m
+ [m
+[31m-ActiveRecord::Schema.define(version: 20161227085208) do[m
+[32m+[m[32mActiveRecord::Schema.define(version: 20161230083929) do[m
+ [m
+   create_table "active_admin_comments", force: :cascade do |t|[m
+     t.string   "namespace"[m
+[36m@@ -115,6 +115,7 @@[m [mActiveRecord::Schema.define(version: 20161227085208) do[m
+     t.string   "last_sign_in_ip"[m
+     t.datetime "created_at",                          null: false[m
+     t.datetime "updated_at",                          null: false[m
+[32m+[m[32m    t.string   "name"[m
+   end[m
+ [m
+   add_index "users", ["email"], name: "index_users_on_email", unique: true[m
+[1mdiff --git a/log/development.log b/log/development.log[m
+[1mindex b10ee8c..98d71c1 100644[m
+[1m--- a/log/development.log[m
+[1m+++ b/log/development.log[m
+[36m@@ -116060,3 +116060,5959 @@[m [mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0[m
+ [m
+ Started GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-28 18:05:24 +0000[m
+ Cannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/" for 172.17.0.1 at 2016-12-30 07:44:03 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32m  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m[m
+[32m+[m[32mProcessing by MoviesController#home as HTML[m
+[32m+[m[32m  Rendered movies/home.html.erb within layouts/devise (7.7ms)[m
+[32m+[m[32mCompleted 200 OK in 1551ms (Views: 1528.9ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-963650c91466903c890b588159de0314e74f3be7b7187114c9e79683ade91438.css?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:05 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/" for 172.17.0.1 at 2016-12-30 07:44:13 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by MoviesController#home as HTML[m
+[32m+[m[32m  Rendered movies/home.html.erb within layouts/devise (0.9ms)[m
+[32m+[m[32mCompleted 200 OK in 52ms (Views: 50.7ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by MoviesController#home as HTML[m
+[32m+[m[32m  Rendered movies/home.html.erb within layouts/devise (1.7ms)[m
+[32m+[m[32mCompleted 200 OK in 49ms (Views: 48.0ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-963650c91466903c890b588159de0314e74f3be7b7187114c9e79683ade91438.css?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:44:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:46:27 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (1.3ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (120.2ms)[m
+[32m+[m[32mCompleted 200 OK in 265ms (Views: 231.7ms | ActiveRecord: 0.4ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (0.5ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (5.0ms)[m
+[32m+[m[32mCompleted 200 OK in 57ms (Views: 55.5ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-963650c91466903c890b588159de0314e74f3be7b7187114c9e79683ade91438.css?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:48:14 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (0.8ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (7.9ms)[m
+[32m+[m[32mCompleted 200 OK in 78ms (Views: 75.7ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-963650c91466903c890b588159de0314e74f3be7b7187114c9e79683ade91438.css?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:51:47 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:52:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (0.6ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (3.4ms)[m
+[32m+[m[32mCompleted 200 OK in 1971ms (Views: 1969.2ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-60b0df6da7c1f5618ecb998521fadc81e8e4a24f02ddcffd3cbffaf86e30fcf7.css?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:52:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:53:21 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (0.6ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (5.1ms)[m
+[32m+[m[32mCompleted 200 OK in 1564ms (Views: 1563.0ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-a2f38ddd3e65eb31422144139c69a046ae2e8d1424fa208ad0660afe571b1c0d.css?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:53:23 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:54:55 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (0.6ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (3.3ms)[m
+[32m+[m[32mCompleted 200 OK in 1399ms (Views: 1397.4ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-2d8cde25121b6a0f26ba538811211263a06feb41e71ce2bb19f8fb1c5379800c.css?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:54:57 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:55:26 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (2.5ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (7.2ms)[m
+[32m+[m[32mCompleted 500 Internal Server Error in 33ms (ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m[32mSyntaxError (/var/www/cinema/app/views/devise/shared/_links.html.erb:1: syntax error, unexpected '='[m
+[32m+[m[32m...buffer = @output_buffer;class = class = local_assigns[:class...[m
+[32m+[m[32m...                               ^):[m
+[32m+[m[32m  app/views/devise/shared/_links.html.erb:1: syntax error, unexpected '='[m
+[32m+[m[32m  app/views/devise/sessions/new.html.erb:31:in `_app_views_devise_sessions_new_html_erb___2247417781727300111_69947316017140'[m
+[32m+[m
+[32m+[m
+[32m+[m[32m  Rendered /usr/local/bundle/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_source.erb (8.1ms)[m
+[32m+[m[32m  Rendered /usr/local/bundle/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (3.2ms)[m
+[32m+[m[32m  Rendered /usr/local/bundle/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.1ms)[m
+[32m+[m[32m  Rendered /usr/local/bundle/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/diagnostics.html.erb within rescues/layout (33.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (0.4ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (4.4ms)[m
+[32m+[m[32mCompleted 200 OK in 83ms (Views: 81.3ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-2d8cde25121b6a0f26ba538811211263a06feb41e71ce2bb19f8fb1c5379800c.css?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:55:40 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (2.3ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (6.5ms)[m
+[32m+[m[32mCompleted 200 OK in 76ms (Views: 74.6ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-2d8cde25121b6a0f26ba538811211263a06feb41e71ce2bb19f8fb1c5379800c.css?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:04 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (2.8ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (6.4ms)[m
+[32m+[m[32mCompleted 200 OK in 75ms (Views: 73.1ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-2d8cde25121b6a0f26ba538811211263a06feb41e71ce2bb19f8fb1c5379800c.css?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/modal.self-3e78617ade5663314b7ee0ea10375a5b34d59ffbade44939e3f2a4e4ef2019b3.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tooltip.self-05afb177e08f98997ccfc84fa08a215e4b27d48d5fe4d049080675e9dffd8199.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/popover.self-0aa93860b59fe7393f1dd490f54b3cb994f9d6155adffce034d4e14ae361b041.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/tab.self-5bf7078b682f8b131332eefa46b45fa5eff2eca745fc0d03e2991450888f7c28.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/scrollspy.self-969f3c5f48cdf1e439c7fa1154c13b948715f5c689f87837c0b64521d3b46ef6.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:16 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/affix.self-6d6f1a7fc5c8aabf3547fa1b794fab6268f54bc55ad815e55873c71f52513517.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:17 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap-sprockets.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:17 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-d521c04d63fe2fc0d99e3edf44207d157c701c7746c5c332d460e76ce00cc0ae.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:17 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:17 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/users/sign_in" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m[32mProcessing by Devise::SessionsController#new as HTML[m
+[32m+[m[32m  Rendered devise/shared/_links.html.erb (1.8ms)[m
+[32m+[m[32m  Rendered devise/sessions/new.html.erb within layouts/devise (5.3ms)[m
+[32m+[m[32mCompleted 200 OK in 60ms (Views: 59.1ms | ActiveRecord: 0.0ms)[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/application.self-2d8cde25121b6a0f26ba538811211263a06feb41e71ce2bb19f8fb1c5379800c.css?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/alert.self-742145c5bb847aafdadc6e339be795628f8bc25f177e851f03a8c42278eb0312.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/button.self-126ac9bf0e7f2d8568f8da3a00fd5f0fac6eae0946331003370161fbf8d7975e.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/transition.self-6ad2488465135ab731a045a8ebbe3ea2fc501aed286042496eda1664fdd07ba9.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/collapse.self-2eb697f62b587bb786ff940d82dd4be88cdeeaf13ca128e3da3850c5fcaec301.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/dropdown.self-561cca1cbaf67474e01e9536f106bad541594860a6df997004591c1c1957a147.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[m
+[32m+[m
+[32m+[m
+[32m+[m[32mStarted GET "/assets/bootstrap/carousel.self-e47323f363ceb3dc0bdbce05e36e709ed428e339833a41140a85cb0af24b8127.js?body=1" for 172.17.0.1 at 2016-12-30 07:57:44 +0000[m
+[32m+[m[32mCannot render console from 172.17.0.1! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255[

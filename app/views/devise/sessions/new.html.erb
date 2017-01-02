@@ -1,19 +1,16 @@
-<div class="container-fluid" id="wallpaper">
-  <div class="gradient">
-  </div>
-  <div class="devise">
-  <div class="col-md-4 col-md-offset-4">
-    <h2 class="center">Log in</h2>
+<div class="devise">
+  <div class="col-md-2 col-md-offset-5 col-xs-8 col-xs-offset-2">
+    <h2 class="center labe">Log in</h2>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class="field">
         <%= f.label :email, class:"labe" %><br />
-        <%= f.email_field :email, autofocus: true, class: "transparent-input" %>
+        <%= f.email_field :email, autofocus: true, class: "form-control labe transparent-input" %>
       </div><br />
 
       <div class="field">
         <%= f.label :password, class:"labe" %><br />
-        <%= f.password_field :password, autocomplete: "off", class: "transparent-input" %>
+        <%= f.password_field :password, autocomplete: "off", class: "form-control labe transparent-input" %>
       </div><br />
 
       <% if devise_mapping.rememberable? -%>
@@ -30,5 +27,8 @@
 
     <%= render "devise/shared/links" %>
   </div>
-  </div>
+</div>
+<div class="gradient">
+</div>
+<div class="container-fluid" id="one">
 </div>

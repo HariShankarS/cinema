@@ -142,27 +142,6 @@ i {
 .sign-in {
   float: right;
 }
-#wallpaper {
-    min-height: 700px;
-    background-image: url("/36.jpg");
-      /* Background image is centered vertically and horizontally at all times */
-  background-position: center center;
-  
-  /* Background image doesn't tile */
-  background-repeat: no-repeat;
-  
-  /* Background image is fixed in the viewport so that it doesn't move when 
-     the content's height is greater than the image's height */
-  background-attachment: fixed;
-  
-  /* This is what makes the background image rescale based
-     on the container's size */
-  background-size: cover;
-  
-  /* Set a background color that will be displayed
-     while the background image is loading */
-  background-color: #464646;
-}
 
 .gradient {
   background: black;
@@ -176,13 +155,14 @@ i {
   position: absolute;
   z-index: 10;
   width: 100%;
+  color: white;
 }
 .transparent-input {
   background-color:rgba(0,0,0,0) !important;
-  border: 1px solid black;
+  border: 1px solid white;
 }
 .labe {
-  color: black;
+  color: white;
   font-family: Sniglet !important;     
 }
 .navbar-brand {
@@ -268,5 +248,9 @@ body {
  }
  .carousel-control {
   background-color: none !important;
+ }
+ .devise a:hover {
+   color: white;
+   text-decoration: none;
  }
  
