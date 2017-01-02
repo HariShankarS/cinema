@@ -56,73 +56,14 @@
     <div class="table-responsive">
       <table class="table table-bordered">
         <tbody>
-          <tr>
-            <td class="sub-headings"><strong>Title:</strong></td>
-            <td class="description"><%= @movie.title %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Movie length:</strong></td>
-            <td class="description"><%= @movie.movie_length %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Starring:</strong></td>
-            <td class="description"><%= @movie.cast %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Director:</strong></td>
-            <td class="description"><%= @movie.director %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Produced by:</strong></td>
-            <td class="description"><%= @movie.producer %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Story by:</strong></td>
-            <td class="description"><%= @movie.story %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Dialogues:</strong></td>
-            <td class="description"><%= @movie.dialogues %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Screenplay by:</strong></td>
-            <td class="description"><%= @movie.screenplay %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Music by:</strong></td>
-            <td class="description"><%= @movie.music %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Lyricists:</strong></td>
-            <td class="description"><%= @movie.lyricists %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Cinematography:</strong></td>
-            <td class="description"><%= @movie.cinematography %></td>
-          </tr>
-
-          <tr>
-            <td class="sub-headings"><strong>Language:</strong></td>
-            <td class="description"><%= @movie.language %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Rating:</strong></td>
-            <td class="description"><%= @movie.rating %></td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Public Rating:</strong></td>
-            <td class="description">
-              <% if @movie.reeviews.blank? %>
-                --
-              <% else %>
-                <%= @movie.average %>/5
-              <% end -%>
-            </td>
-          </tr>
-          <tr>
-            <td class="sub-headings"><strong>Country:</strong></td>
-            <td class="description"><%= @movie.country_name %></td>
-          </tr>             
+          <% Movie.column_names.each do |attribute| %>
+            <% if (@movie.send(attribute)).present? %>
+            <tr>
+              <td class="sub-headings"><strong><%= attribute.humanize %></strong></td>
+              <td class="description"><%= @movie.send attribute %></td>
+            </tr>
+            <% end -%>
+          <% end -%>
         </tbody>
       </table>
     </div>
