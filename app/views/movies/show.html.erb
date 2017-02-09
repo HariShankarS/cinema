@@ -56,7 +56,7 @@
     <div class="table-responsive">
       <table class="table table-bordered">
         <tbody>
-          <% Movie.column_names.each do |attribute| %>
+          <% Movie::COLUMNS.each do |attribute| %>
             <% if (@movie.send(attribute)).present? %>
             <tr>
               <td class="sub-headings"><strong><%= attribute.humanize %></strong></td>

@@ -7,7 +7,11 @@ class MoviesController < ApplicationController
   end
     
   def index
-    @movies = Movie.where(["title LIKE ?","%#{params[:search]}%"])
+    if params[:search].present?
+      @movies = Movie.where(["title LIKE ?","%#{params[:search]}%"])
+    else
+      @genres = ["Crime","Action","Thriller","Horror"]
+    end
   end
 
   def show
