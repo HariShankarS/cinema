@@ -5,7 +5,12 @@ RUN sed -i.bkp -e \
       's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
       /etc/sudoers
       
-RUN apt-get install -qq -y dialog libcurl3 libxml2 curl  nano git --fix-missing --no-install-recommends 
+RUN apt-get install -qq -y apt-transport-https default-jre dialog libcurl3 libxml2 curl  nano git --fix-missing --no-install-recommends 
+
+RUN wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+RUN echo 'deb https://debian.neo4j.org/repo stable/' | sudo tee /etc/apt/sources.list.d/neo4j.list
+RUN sudo apt-get update
+RUN sudo apt-get install neo4j
 
 ENV INSTALL_PATH /var/www/cinema
 ENV RAILS_ENV development
