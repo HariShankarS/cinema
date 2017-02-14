@@ -13,46 +13,6 @@
     <iframe width="630" height="315" src="<%= @movie.trailer %>" frameborder="0" allowfullscreen></iframe>
   </div>
   <div class="col-md-10 col-md-offset-1">
-    <h3 class="sub-headings"> Review: </h3>
-    <h4 class="descript"><%= @movie.description %></h4>
-    <h3 class="sub-headings"> User Reviews: </h3>
-    
-    <% if @movie.reeviews.blank? %>
-      <h5 class="descript">No reviews just yet, would you like to add the first! 
-      <% unless user_signed_in? %>
-        <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-info" %> </h5>
-      <% end -%>
-    <% else %>
-      <% @movie.reeviews.each do |review| %>
-        <div class="reviews">
-          <div class="col-md-3">
-            <%= review.user.email %>
-          </div>
-          <div class="col-md-7" >
-            <div class="col-md-2">
-              <h6><%= review.rating %> </h6>
-            </div>
-            <div class="col-md-10">
-              <% if review.user == current_user %>
-                <%= link_to edit_movie_reeview_path({id: review.id, movie_id: @movie.id}) do %>
-                  <i class="material-icons">mode_edit</i>
-                <% end -%>
-              <% end -%>
-            </div>
-            <div class="col-md-12"><%= review.comment %> </div>
-          </div>
-        </div>
-        <hr />
-      <% end %>
-    <% end %>
-    <% if user_signed_in? %>
-    <% unless @reviewed_users.include?(current_user.id) %>
-      <%= link_to "Add your opinion", new_movie_reeview_path(@movie), class: "btn btn-raised btn-info" %>
-    <% end %>
-    <% end -%>
-      <br /><br /><br /><br />
-  </div>
-  <div class="col-md-10 col-md-offset-1">
     <div class="table-responsive">
       <table class="table table-bordered">
         <tbody>
@@ -67,7 +27,44 @@
         </tbody>
       </table>
     </div>
-  </div>  
+  </div>
+  <div class="col-md-10 col-md-offset-1">
+    <h3 class="sub-headings"> Review: </h3>
+    <h4 class="descript"><%= @movie.description %></h4>
+    <h3 class="sub-headings"> User Reviews: </h3>
+    
+    <% if @movie.reeviews.blank? %>
+      <h5 class="descript">No reviews just yet, would you like to add the first! 
+      <% unless user_signed_in? %>
+        <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-info" %> </h5>
+      <% end -%>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <tbody>
+            <% @movie.reeviews.each do |review| %>
+              <div class="reviews">
+                <tr>
+                  <td><%= review.user.name %></td>
+                  <td><%= review.comment %></td>
+                  <td><h6><%= review.rating %> </h6></td>
+                  <% if review.user == current_user %>
+                    <td><%= link_to "Edit",edit_movie_reeview_path({id: review.id, movie_id: @movie.id})  %></td>
+                  <% end -%>
+                </tr>
+              </div>
+            <% end %>
+          </tbody>
+        </table>
+      </div>        
+    <% end %>
+    <% if user_signed_in? %>
+    <% unless @reviewed_users.include?(current_user.id) %>
+      <%= link_to "Add your opinion", new_movie_reeview_path(@movie), class: "btn btn-raised btn-info" %>
+    <% end %>
+    <% end -%>
+      <br /><br /><br /><br />
+  </div>
 </div>
 
 </div>

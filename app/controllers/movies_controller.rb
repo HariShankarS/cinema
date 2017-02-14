@@ -8,7 +8,7 @@ class MoviesController < ApplicationController
     
   def index
     if params[:search].present?
-      @movies = Movie.where(["title LIKE ?","%#{params[:search]}%"])
+      @movies = Movie.where(["title ILIKE ?","%#{params[:search]}%"])
     else
       @genres = ["Crime","Action","Thriller","Horror"]
     end

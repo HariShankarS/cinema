@@ -38,6 +38,11 @@ class ReeviewsController < ApplicationController
 
   def update
     @reeview.update(reeview_params)
+    if @reeview.save
+      redirect_to @movie
+    else
+      render 'edit'
+    end
   end
 
   def destroy
