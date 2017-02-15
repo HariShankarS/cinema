@@ -24,4 +24,9 @@ end
 group :production do
   gem 'uglifier'
 end
-
+gem 'unicorn'
+group :development do
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
+  gem 'capistrano3-unicorn'
+end

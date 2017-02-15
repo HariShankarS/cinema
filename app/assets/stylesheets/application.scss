@@ -68,13 +68,10 @@ i {
   position: absolute;
   overflow: hidden;
   width: 100%;
-  background: -moz-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* ff3.6+ */
-  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(0,0,0,1)), color-stop(150%, rgba(0,0,0,0))); /* safari4+,chrome */
-  background: -webkit-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* safari5.1+,chrome10+ */
-  background: -o-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* opera 11.10+ */
-  background: -ms-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* ie10+ */
-  background: linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* w3c */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ffffff',GradientType=1 ); /* ie6-9 */
+  background: -webkit-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /*  For Safari 5.1 to 6.0  */
+  background: -o-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* opera 11.6 to 12 */
+  background: -moz-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* Firefox 3.6 to 15 */
+  background: linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* Standard syntax (must be last) */
 }
 .back img {
   border: 2px solid #333333;
