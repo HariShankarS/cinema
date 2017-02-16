@@ -12,7 +12,7 @@ gem 'paperclip', '~> 5.1'
 gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
 gem 'activeadmin', '~> 1.0.0.pre4'
 gem 'country_select'
-gem 'neo4j'
+# gem 'neo4j'
 group :development, :test do
   gem 'byebug'
   gem 'sqlite3'
