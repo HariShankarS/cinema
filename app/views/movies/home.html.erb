@@ -44,11 +44,7 @@
   <div class="description">
     <h1>Your Favourite Movies Reviewed</h1>
     <h2> Collection of Hit Movies, Songs and Trailers. </h2> <br>
-    <% if user_signed_in? %>
-      <%= link_to "Movies", movies_path, class:"btn btn-raised btn-danger button1" %>
-    <% else %>
-      <%= link_to "SIGN UP FOR FREE", new_user_registration_path, class:"btn btn-raised btn-danger button1" %>
-    <% end -%>
+    <%= link_to "Movies", movies_path, class:"btn btn-raised btn-danger button1" %>
   </div>
 </div>
 
