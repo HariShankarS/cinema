@@ -9,7 +9,7 @@ class MoviesController < ApplicationController
     if params[:search].present?
       @movies = Movie.where(["title ILIKE ?","%#{params[:search]}%"])
     else
-      @genres = ["Crime","Action","Thriller","Horror"]
+      @genres = ["Romance","Thriller","Crime","Action","Horror"]
     end
   end
 
