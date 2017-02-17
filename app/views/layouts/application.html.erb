@@ -33,7 +33,7 @@
             <% if user_signed_in? %>
               <%= form_tag movies_path, :method => 'get' do %>
                 <%= text_field_tag :search, params[:search],class: "form-control transparent-input white-text" %>
-                <%= submit_tag "Search",class: "btn btn-raised btn-danger button1" %>
+                <%= submit_tag "Search", class: "btn btn-raised btn-danger button1" %>
               <% end %> 
             <% end -%>
           </ul>

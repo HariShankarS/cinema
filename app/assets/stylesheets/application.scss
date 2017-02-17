@@ -40,54 +40,12 @@ i {
   margin-bottom: 0px;
   border: 0;
 }
-
-.back  {
-  transform: rotateX(30deg) rotateY(-25deg) rotateZ(15deg);
-  width: 130%;
-  margin-left: -16%;
-  margin-top: -5%;
-  margin-bottom: -10%;
-  z-index: -1;
-  background :#333333;
-  font-family: Sniglet;
-}
-.zoom-in {
-  transition: all .3s linear;
-  transition-duration: 8s;
-  transform: scale(1.1);
-}
-.zoom-out {
-  transition: all .3s linear;
-  transition-duration: 8s;
-  transform: scale(1);
-}
-.out {
-  width: 100%;
-}
-.outer {  
-  position: absolute;
-  overflow: hidden;
-  width: 100%;
-  background: -webkit-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /*  For Safari 5.1 to 6.0  */
-  background: -o-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* opera 11.6 to 12 */
-  background: -moz-linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* Firefox 3.6 to 15 */
-  background: linear-gradient(65deg, rgba(0,0,0,1) -10%, rgba(0,0,0,0) 150%); /* Standard syntax (must be last) */
-}
-.back img {
-  border: 2px solid #333333;
-}
 .mainn, .main {
   position: absolute;
   width: 100%;
   z-index: 10;
 }
-.button {
-  margin-top: 30px;
-  margin-right: 40px;
-  padding-left: 15px;
-  padding-right: 15px; 
-  background-color: #E50914;
-}
+
 .mainn .button1 {
   padding-left: 25px;
   padding-right: 25px; 
@@ -119,25 +77,12 @@ i {
   font-weight: bold;
   color: white;
 }
-.title h1 {
-  font-family: Sniglet;
-  font-size: 40px;
-  font-weight: bold;
-  padding-left: 30px; 
-  color: #E50914;
-}
 .description {
   padding: 250px 0px 150px 50px;
-}
-.title {
-  float: left;
 }
 .titles {
   text-align: center;
   font-family: Sniglet;
-}
-.sign-in {
-  float: right;
 }
 
 .gradient {
@@ -223,6 +168,27 @@ i {
 
 body {
   background-color: #2E2E2E;
+}
+.mainn {
+  min-height: 700px;
+  background-image: url("/final.jpg");
+      /* Background image is centered vertically and horizontally at all times */
+  background-position: center center;
+  
+  /* Background image doesn't tile */
+  background-repeat: no-repeat;
+  
+  /* Background image is fixed in the viewport so that it doesn't move when 
+     the content's height is greater than the image's height */
+/*  background-attachment: fixed;
+*/  /* This is what makes the background image rescale based
+     on the container's size */
+  background-size: cover;
+  
+  /* Set a background color that will be displayed
+     while the background image is loading */
+  background-color: #464646; /* ie6-9 */
+
 }
 .item img {
   width: 210px;

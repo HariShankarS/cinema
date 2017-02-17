@@ -1,50 +1,7 @@
-<div class="out" id="div1">
-  <div class="outer">
-    <div class="back">
-      <img src="/14.jpg" height="220" width="200">
-      <img src="/18.jpg" height="220" width="250">
-      <img src="/8.jpg" height="220" width="150">    
-      <img src="/7.jpg" height="220" width="187">
-      <img src="/29.jpg" height="220" width="187">
-      <img src="/6.jpg" height="220" width="374">
-      <img src="/21.jpg" height="220" width="290">
-      <img src="/10.jpg" height="220" width="290">
-      <img src="/15.jpg" height="220" width="187">
-      <img src="/9.jpg" height="220" width="250">
-      <img src="/3.jpg" height="220" width="420">
-      <img src="/20.jpg" height="220" width="240">
-      <img src="/17.jpg" height="220" width="260">
-      <img src="/13.jpg" height="220" width="300">
-      <img src="/23.jpg" height="220" width="230">
-      <img src="/5.jpg" height="220" width="300">
-      <img src="/2.jpg" height="220" width="450">
-      <img src="/34.jpg" height="220" width="440">
-      <img src="/12.jpg" height="220" width="190">
-      <img src="/27.jpg" height="220" width="250">
-      <img src="/16.jpg" height="220" width="300">
-      <img src="/24.jpg" height="220" width="200">
-      <img src="/25.jpg" height="220" width="187">
-      <img src="/1.jpg" height="220" width="187">
-      <img src="/11.jpg" height="220" width="187">
-      <img src="/30.jpg" height="220" width="220">
-    </div>
-  </div>
-</div>
 <div class="mainn">
-  <div class="title">
-    <h1>CINEMA</h1>
-  </div>
-  <div class="sign-in">
-    <% if user_signed_in? %>
-      <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"btn btn-raised btn-danger button" %>
-    <% else %>
-      <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-danger button" %>
-    <% end -%>
-  </div>
   <div class="description">
     <h1>Your Favourite Movies Reviewed</h1>
     <h2> Collection of Hit Movies, Songs and Trailers. </h2> <br>
     <%= link_to "Movies", movies_path, class:"btn btn-raised btn-danger button1" %>
   </div>
 </div>
-
