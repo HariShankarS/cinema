@@ -16,6 +16,7 @@ class MoviesController < ApplicationController
   def show
     @reviews = @movie.reeviews
     @reviewed_users = @reviews.collect(&:user_id)
+    @reeview = Reeview.new
   end
 
   def new

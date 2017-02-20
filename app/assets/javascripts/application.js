@@ -15,3 +15,8 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require_tree .
+$(document).ready(function(){
+  $("#add-button").click(function(){
+    $("#add-review").toggle();
+  });
+});

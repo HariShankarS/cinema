@@ -1,70 +1,66 @@
 <% @title="#{@movie.title} - #{@movie.categories.collect(&:genre).join("/")} - Cinema" %>
 <div class="container-fluid">
-<div class="show panel panel-default">
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-4 col-md-offset-4">
-        <br /><br /><br /><br />
-        <h1 class="titles"><%= @movie.title %></h1>
-        <br /><br />
+  <div class="show panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+          <br /><br /><br /><br />
+          <h1 class="titles"><%= @movie.title %></h1>
+          <br /><br />
+        </div>
       </div>
-  </div>
-  <div class="col-md-6 col-md-offset-3">
-    <iframe width="630" height="315" src="<%= @movie.trailer.gsub("watch?v=","embed/") %>" frameborder="0" allowfullscreen></iframe>
-  </div>
-  <div class="col-md-10 col-md-offset-1">
-    <div class="table-responsive">
-      <table class="table table-bordered">
-        <tbody>
-          <% Movie::COLUMNS.each do |attribute| %>
-            <% if (@movie.send(attribute)).present? %>
-            <tr>
-              <td class="sub-headings"><strong><%= attribute.humanize %></strong></td>
-              <td class="description"><%= @movie.send attribute %></td>
-            </tr>
-            <% end -%>
+      <div class="col-md-6 col-md-offset-3">
+        <iframe width="630" height="315" src="<%= @movie.trailer.gsub("watch?v=","embed/") %>" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="col-md-10 col-md-offset-1">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <tbody>
+              <% Movie::COLUMNS.each do |attribute| %>
+                <% if (@movie.send(attribute)).present? %>
+                <tr>
+                  <td class="sub-headings"><strong><%= attribute.humanize %></strong></td>
+                  <td class="description"><%= @movie.send attribute %></td>
+                </tr>
+                <% end -%>
+              <% end -%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-10 col-md-offset-1">
+        <h4 class="descript"><%= @movie.description %></h4>
+        <h3 class="sub-headings"> User Reviews: </h3>
+        <% if @movie.reeviews.blank? %>
+          <h5 class="descript">No reviews just yet, would you like to add the first! 
+          <% unless user_signed_in? %>
+            <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-info" %> </h5>
           <% end -%>
-        </tbody>
-      </table>
+        <% else %>
+          <% @movie.reeviews.each do |review| %>
+            <div class="row row-fluid">
+              <div class="col-md-6">
+                <div class="well well-md clearfix">
+                  <span class="user-name"><%= review.user.name %></span>&nbsp;&nbsp;&nbsp;
+                  <%= review.rating %>/5
+                  <h6><%= review.comment %></h6>
+                  <% if review.user == current_user %>
+                    <%= link_to "Edit",edit_movie_reeview_path({id: review.id, movie_id: @movie.id})  %>
+                  <% end -%>
+                </div>
+              </div>
+            </div>
+          <% end %>      
+        <% end %>
+        <% if user_signed_in? %>
+          <% unless @reviewed_users.include?(current_user.id) %>
+            <br><br><button class="btn btn-raised btn-info" id="add-button">Add your opinion</button>
+            <div id="add-review">
+              <%= render 'reeviews/form' %>
+            </div>
+          <% end %>
+        <% end -%><br /><br /><br /><br />
+      </div>
     </div>
   </div>
-  <div class="col-md-10 col-md-offset-1">
-    <h3 class="sub-headings"> Review: </h3>
-    <h4 class="descript"><%= @movie.description %></h4>
-    <h3 class="sub-headings"> User Reviews: </h3>
-    
-    <% if @movie.reeviews.blank? %>
-      <h5 class="descript">No reviews just yet, would you like to add the first! 
-      <% unless user_signed_in? %>
-        <%= link_to "Sign In", new_user_session_path, class:"btn btn-raised btn-info" %> </h5>
-      <% end -%>
-    <% else %>
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <tbody>
-            <% @movie.reeviews.each do |review| %>
-              <div class="reviews">
-                <tr>
-                  <td><%= review.user.name %></td>
-                  <td><%= review.comment %></td>
-                  <td><h6><%= review.rating %> </h6></td>
-                  <% if review.user == current_user %>
-                    <td><%= link_to "Edit",edit_movie_reeview_path({id: review.id, movie_id: @movie.id})  %></td>
-                  <% end -%>
-                </tr>
-              </div>
-            <% end %>
-          </tbody>
-        </table>
-      </div>        
-    <% end %>
-    <% if user_signed_in? %>
-    <% unless @reviewed_users.include?(current_user.id) %>
-      <%= link_to "Add your opinion", new_movie_reeview_path(@movie), class: "btn btn-raised btn-info" %>
-    <% end %>
-    <% end -%>
-      <br /><br /><br /><br />
-  </div>
-</div>
-
 </div>
