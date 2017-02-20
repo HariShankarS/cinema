@@ -37,7 +37,6 @@ i {
   padding-right: 0px  !important;
 }
 .navbar {
-  margin-bottom: 0px;
   border: 0;
 }
 .mainn, .main {
@@ -112,8 +111,6 @@ i {
   font-weight: bold;
   font-size: 35px;
   color: #E50914 !important;
-  padding-left: 40px !important;
-  padding-top: 30px !important;
 }
 .genre-headings { 
   font-family: Arial, Helvetica, sans-serif;
@@ -125,25 +122,12 @@ i {
 }
 
 .navbar .navbar-nav > li >a {
-  outline: 0;
-  margin: 15px;
   font-size: 18px;
   color: #E50914 !important;
   font-weight: bold;
   font-family:  Josefin Sans,sans-serif;
 }
 
-.navbar .navbar-nav > .active > a, .navbar .navbar-nav > .active > a:hover, .navbar .navbar-nav > .active > a:focus{
-  color: #FE9A2E!important;
-}
-
-.navbar .navbar-nav > li >a:hover {
-  color: #FE9A2E!important;
-}
-
-.navbar-collapse {
-  margin-right: 100px!important;
-}
 
   #one {
   min-height: 700px;
@@ -222,10 +206,6 @@ body {
 .col-md-2 {
   margin-bottom: 20px;
   margin-top: 20px;
-}
-.navbar-form {
-  margin-top: 20px;
-  margin-left: 20px;
 }
 .white-text {
   color: white;
